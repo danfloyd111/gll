@@ -31,12 +31,33 @@ typedef struct _list_t {
 list_t* list ();
 
 /*
-  DESCRIPTION: Inserts the chunk of data in the head of the list
+  DESCRIPTION: Returns the length of the list passed as argument
   ARGUMENTS:
-    dat - pointer to the chunk of data to insert
+    lis - pointer to the list
+  RETURNS the length of the list
+  ON ERROR: returns -1 and sets errno to EINVAL if the argument
+            is null
+*/
+int length (list_t*);
+
+/*
+  DESCRIPTION: Inserts an element in the head of the list passed
+               as arguments
+  ARGUMENTS:
+    dat - pointer to the element
     lis - pointer to the list
   RETURNS 0 if the function terminates correctly
   ON ERROR: returns 1 and sets errno to ENOMEM if memory error
             occours / EINVAL if one of the arguments is null
 */
 int push (void*, list_t*);
+
+/*
+  DESCRIPTION: Returns and remove the first element from the list
+  ARGUMENTS:
+    lis - pointer to the list 
+  RETURNS the first element of the list
+  ON ERROR: returns NULL and sets errno to EINVAL if the argument
+            is null / ENODATA if the list is empty
+*/
+void* pop (list_t*);

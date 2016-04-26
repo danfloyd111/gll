@@ -15,7 +15,7 @@ list_t* list () {
   return this;
 }
 
-/* Push new chunk of data in the head of the list */
+/* Insert an element in the head of the list */
 int push (void* dat, list_t* lis) {
   if(dat == NULL || lis == NULL) {
     errno = EINVAL;
@@ -32,4 +32,12 @@ int push (void* dat, list_t* lis) {
   lis->head = this;
   lis->length ++;
   return 0;
+}
+
+/* Return the length of the list */
+int length (list_t lis) {
+  if(lis == NULL) {
+    errno = EINVAL;
+    return -1;
+  } else return lis->length;
 }
