@@ -14,8 +14,7 @@ typedef struct _node_t {
 /* List structure */
 typedef struct _list_t {
   node* head;
-  node* tail; /* maybe is not necessary */
-
+  node* tail;
   int length;
 } list_t;
 
@@ -42,7 +41,7 @@ int length (list_t*);
 
 /*
   DESCRIPTION: Inserts an element in the head of the list passed
-               as arguments
+               as argument
   ARGUMENTS:
     dat - pointer to the element
     lis - pointer to the list
@@ -53,7 +52,20 @@ int length (list_t*);
 int push (void*, list_t*);
 
 /*
+  DESCRIPTION: Appends an element to the tail of the list passed
+               as argument
+  ARGUMENTS:
+    dat - pointer to the element
+    lis - ponter to the list
+  RETURNS 0 if the function terminates correctly
+  ON ERROR: returns 1 and sets errno to ENOMEM if memory error
+            occours / EINVAL if one of the argument is null
+*/
+int append (void*, list_t*);
+
+/*
   DESCRIPTION: Returns and remove the first element from the list
+               passed as argument
   ARGUMENTS:
     lis - pointer to the list 
   RETURNS the first element of the list
