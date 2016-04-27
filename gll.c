@@ -1,22 +1,5 @@
 #include "gll.h"
-
 /* Please see gll.h for further informations */
-
-/* HELPERS */
-
-/* Remove an element and its content */
-void h_remove (node_t* this) {
-  if(this) {
-    node_t p = this->prev, n = this->next;
-    if (p)
-      p->next = n;
-    if (n)
-      n->prev = p;
-    if (this->data)
-      free(data);
-    free(this);
-  }
-}
 
 /* IMPLEMENTATION */
 
@@ -81,4 +64,27 @@ int append (void* dat, list_t* lis) {
   lis->tail = this;
   lis->length ++;
   return 0;
+}
+
+/* Return and remove the first element from the list */
+void* pop (list_t* lis) {
+  node_t* f = NULL;
+  void* e = NULL;
+  if(lis) {
+    if(!length(lis))
+      errno = ENODATA;
+    else {
+      f = lis->head;
+      e = f->data;
+      if(length(lis)==1)
+	tail = NULL;
+      else
+	f->next->prev = NULL;
+      lis->head = f->next;
+      free(f);
+    }
+  } else {
+    errno = EINVAL;
+  }
+  return e;
 }
