@@ -51,7 +51,7 @@ int push (void* dat, list_t* lis) {
 }
 
 /* Append an element to the tail of the list */
-int append (void* dat, list_t* lis) {
+int append (list_t* lis, void* dat) {
   if (!dat || !lis) {
     errno = EINVAL;
     return 1;
@@ -156,7 +156,42 @@ int remove (list_t* lis, int ind) {
 
 /* Return the element at specified index*/
 void* get (list_t* lis, int ind) {
-  if(lis == NULL
+  if(lis == NULL || ind < 0 || ind > length(lis)-1) {
+    errno = EINVAL;
+    return NULL;
+  }
+  if(length(lis) == 0) {
+    errno = ENODATA;
+    return NULL;
+  }
+  node_t* it = lis->head;
+  while(ind) {
+    it = it->next;
+    ind --;
+  }
+  return it->data;
+}
+
+/* Set the element at specified index with the element
+   passed as argument */
+int set (list_t* lis, void* dat, int ind) {
+  if(lis == NULL || ind < 0 || ind > length(lis)-1) {
+    errno = EINVAL;
+    return 1;
+  }
+  if(length(lis) == 0) {
+    errno = ENODATA;
+    return 1;
+  }
+  node_t* it = lis->head;
+  while(ind) {
+    it = it->next;
+    ind --;
+  }
+  free(it->data);
+  it->data = dat;
+  return 0;
+}
 
 /* Return the index of the element */
 int index_of (list_t* lis, void* dat) {
@@ -168,8 +203,76 @@ int index_of (list_t* lis, void* dat) {
   int len = length(lis);
   if(len) {
     node_t* it = lis->head;
-    for(int j=0; j<len; j++) {
-      /* NEED GET & SET FUNCTIONS HERE */
+    int flag = 1;
+    ind++;
+    while(ind < len && flag){
+      if(compare(get(lis,ind),dat) == 0)
+	flag = 0;
+      ind++;
+    }
+    if(!flag) {
+      ind--;
+      return ind;
     }
   }
+  errno = ENODATA;
+  return -1;
+}
+
+/* Destroy the list and all of its elements */
+void destroy (list_t* lis) {
+  if(lis) {
+    node_t* it = lis->head;
+    if(it) {
+      node_t* el;
+      while(it) {
+	el = it;
+	free(it->data);
+	it = it->next;
+	free(el);
+      }
+    }
+    free(lis);
+  }
+}
+
+/* Return a new list mapped with the function passed
+   as argument */
+list_t* map (list_t* lis, void(*fun)(void*)) {
+  if(!lis || !fun) {
+    errno = EINVAL;
+    return NULL;
+  }
+  if(!length(lis)) {
+    errno = ENODATA;
+    return NULL;
+  }
+  list_t* nl = list(lis->compare);
+  node_t* it = lis->head;
+  while(it) {
+    append(nl, fun(it->data));
+    it = it->next;
+  }
+  return nl;
+}
+
+/* Return a new list filtered with the function passed
+   as argument */
+list_t* filter (list_t* lis, int(*fun)(void*)) {
+  if(!lis || !fun) {
+    errno = EINVAL;
+    return NULL;
+  }
+  if(!length(lis)) {
+    errno = ENODATA;
+    return NULL;
+  }
+  list_t* nl = list(lis->compare);
+  node_t* it = lis->head;
+  while(it) {
+    if(fun(it->data))
+      append(nl,it->data);
+    it = it->next;
+  }
+  return nl;
 }

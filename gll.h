@@ -64,7 +64,7 @@ int push (void*, list_t*);
   ON ERROR: returns 1 and sets errno to ENOMEM if memory error
             occours / EINVAL if one of the argument is null
 */
-int append (void*, list_t*);
+int append (list_t*, void*);
 
 /*
   DESCRIPTION: Returns and remove the first element from the list
@@ -115,8 +115,19 @@ int remove (list_t*, int);
  */
 void* get (list_t*, int);
 
-/* NEED DOCS HERE */
-int set (list_t*, int);
+/*
+  DESCRIPTION: Sets the element at the index passed as argument with the
+               data passed as argument
+  ARGUMENTS:
+    lis - pointer to the list
+    dat - pointer to the new element
+    ind - index of the element to set
+  RETURNS 0 if the function ends correctly
+  ON ERROR: returns 0 and sets errno to EINVAL if one of the arguments is
+            null or ind < 0 or ind <= length(is) / ENODATA if the list is
+            empty
+*/
+int set (list_t*, void*, int);
 
 /*
   DESCRIPTION: Returns the index of the element passed as argument
@@ -133,4 +144,41 @@ int set (list_t*, int);
 */
 int index_of (list_t*, void*);
 
+/*
+  DESCRIPTION: Deletes the list and all its elements
+  ARGUMENTS:
+    lis - pointer to the list
+  RETURNS void
+  ON ERROR: -
+  n.b. I decided to not check errors on free and do nothing if a null
+       argument is passed to the function
+*/
+void destroy (list_t*);
 
+/*
+  DESCRIPTION: Returns a new list where all its elements are the result
+               of the function passed as arguments applied to all the 
+               elements contained in the list passed as argument
+  ARGUMENTS:
+    lis - pointer to the list
+    fun - pointer to the function
+  RETURNS the pointer to the newly "mapped" list
+  ON ERROR: returns null and sets errno to EINVAL if one of the arguments
+            is null / ENODATA if the list passed as argument is empty
+*/
+list_t* map (list_t*, void(*fun)(void*));
+
+/* 
+  DESCRIPTION: Returns a new list where all its elements are the result
+               of "filtering" the list passed as argument using the 
+               function passed as argument
+  ARGUMENTS:
+    lis - pointer to the list
+    fun - pointer to the function
+  RETURNS the pointer to the newly "filterd" list
+  ON ERROR: returns null and sets errno to EINVAL if one of the arguments
+            is null / ENODATA if the list passed as argument is empty
+*/
+list_t* filter (list_t*, int(*fun)(void*));
+
+/* TODO: provide a custom function used to free lis->data !!!!!! */
