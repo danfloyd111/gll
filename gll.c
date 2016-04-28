@@ -154,7 +154,11 @@ int remove (list_t* lis, int ind) {
   return 0;
 }
 
-/* Returns the index of the element */
+/* Return the element at specified index*/
+void* get (list_t* lis, int ind) {
+  if(lis == NULL
+
+/* Return the index of the element */
 int index_of (list_t* lis, void* dat) {
   int ind = -1;
   if(!lis || !dat) {

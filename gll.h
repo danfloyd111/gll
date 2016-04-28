@@ -96,11 +96,27 @@ void* cut (list_t*);
     ind - index of the element
   RETURNS 0 if the function ends correctly
   ON ERROR: returns 1 and sets errno to EINVAL if one of the
-            arguments is null or -1 < ind < length(lis)
+            arguments is null or ind < 0 or ind <= length(lis)
 	    n.b. indexes start from 0 / ENODATA if the list
 	    is empty
 */
 int remove (list_t*, int);
+
+/*
+  DESCRIPTION: Returns the element at the index passed as argument if is
+               contained in the list passed as argument
+  ARGUMENTS:
+    lis - pointer to the list
+    ind - index of the element (count starts from 0)
+  RETURNS pointer to the element
+  ON ERROR: returns NULL and sets errno to EINVAL if one of the arguments
+            is null or ind < 0 or ind <= length(lis) / ENODATA if the list
+	    is empty
+ */
+void* get (list_t*, int);
+
+/* NEED DOCS HERE */
+int set (list_t*, int);
 
 /*
   DESCRIPTION: Returns the index of the element passed as argument
@@ -117,10 +133,4 @@ int remove (list_t*, int);
 */
 int index_of (list_t*, void*);
 
-/*
-  DESCRIPTION: Returns the element at the index passed as argument
- */
-void* get (list_t*, int);
 
-/* NEED DOCS HERE */
-int set (list_t*, int);
