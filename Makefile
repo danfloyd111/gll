@@ -26,3 +26,7 @@ clean:
 	@echo "==> All clean!"
 
 uninstall: clean
+
+test: all
+	@echo ">> Compiling test..."
+	@echo ">> Running test..."
