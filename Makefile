@@ -11,7 +11,7 @@ SHELL = /bin/bash
 
 all: gll.c
 	@echo ">> Compiling the sources..."
-	@gcc gll.c -c -Wall -Wextra -std=c11 -o2
+	@gcc gll.c -c -Wall -Wextra -std=c11 -O2
 	@echo ">> Creating libraries..."
 	@ar ruv libgll.a gll.o
 	@echo ">> Indexing libraries..."
@@ -22,7 +22,7 @@ install: all
 
 clean:
 	@echo "==> Cleaning binary and object files..."
-	@rm -f 2 gll.o libgll.a
+	@rm -f gll.o libgll.a
 	@echo "==> All clean!"
 
 uninstall: clean
