@@ -10,9 +10,13 @@ SHELL = /bin/bash
 .PHONY : test
 
 all: gll.c
-	@echo "==> Compiling the sources..."
+	@echo ">> Compiling the sources..."
 	@gcc gll.c -c -Wall -Wextra -std=c11 -o2
-	@echo "==> Compilation done!"
+	@echo ">> Creating libraries..."
+	@ar ruv libgll.a gll.o
+	@echo ">> Indexing libraries..."
+	@ranlib libgll.a
+	@echo ">> All done!"
 
 install: all
 
