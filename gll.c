@@ -4,7 +4,7 @@
 /* IMPLEMENTATION */
 
 /* Create new list */
-list_t* list (int(*comp)(void*,void*)) {
+list_t* list (int(*comp)(void*,void*), void(*mdea)(void*)) {
   list_t* this;
   if(comp == NULL) {
     errno = EINVAL;
@@ -18,11 +18,12 @@ list_t* list (int(*comp)(void*,void*)) {
   this->tail = NULL;
   this->length = 0;
   this->compare = comp;
+  this->mdealloc = mdea;
   return this;
 }
 
 /* Return the length of the list */
-int length (list_t lis) {
+int length (list_t* lis) {
   if(!lis) {
     errno = EINVAL;
     return -1;
@@ -138,7 +139,7 @@ int remove (list_t* lis, int ind) {
     it = it->next;
     ind--;
   }
-  free(it->data);
+  lis->mdealloc(it->data);
   /* list merging */
   if(it->prev)
     it->prev->next = it->next;
@@ -149,7 +150,7 @@ int remove (list_t* lis, int ind) {
     lis->head = it->next;
   if(ind == (length(lis)-1))
     lis->tail = it->prev;
-  list->length --;
+  lis->length --;
   free(it);
   return 0;
 }
@@ -188,7 +189,7 @@ int set (list_t* lis, void* dat, int ind) {
     it = it->next;
     ind --;
   }
-  free(it->data);
+  lis->mdealloc(it->data);
   it->data = dat;
   return 0;
 }
@@ -202,11 +203,10 @@ int index_of (list_t* lis, void* dat) {
   }
   int len = length(lis);
   if(len) {
-    node_t* it = lis->head;
     int flag = 1;
     ind++;
     while(ind < len && flag){
-      if(compare(get(lis,ind),dat) == 0)
+      if(lis->compare(get(lis,ind),dat) == 0)
 	flag = 0;
       ind++;
     }
@@ -229,7 +229,7 @@ void destroy (list_t* lis) {
 	el = it;
 	free(it->data);
 	it = it->next;
-	free(el);
+	lis->mdealloc(el);
       }
     }
     free(lis);
@@ -238,7 +238,7 @@ void destroy (list_t* lis) {
 
 /* Return a new list mapped with the function passed
    as argument */
-list_t* map (list_t* lis, void(*fun)(void*)) {
+list_t* map (list_t* lis, void*(*fun)(void*)) {
   if(!lis || !fun) {
     errno = EINVAL;
     return NULL;
@@ -247,7 +247,7 @@ list_t* map (list_t* lis, void(*fun)(void*)) {
     errno = ENODATA;
     return NULL;
   }
-  list_t* nl = list(lis->compare);
+  list_t* nl = list(lis->compare, lis->mdealloc);
   node_t* it = lis->head;
   while(it) {
     append(nl, fun(it->data));
@@ -267,7 +267,7 @@ list_t* filter (list_t* lis, int(*fun)(void*)) {
     errno = ENODATA;
     return NULL;
   }
-  list_t* nl = list(lis->compare);
+  list_t* nl = list(lis->compare, lis->mdealloc);
   node_t* it = lis->head;
   while(it) {
     if(fun(it->data))

@@ -7,16 +7,17 @@
 /* Element of the list */
 typedef struct _node_t {
   void* data;
-  _node* prev;
-  _node* next;
+  struct _node_t* prev;
+  struct _node_t* next;
 } node_t;
 
 /* List structure */
 typedef struct _list_t {
-  node* head;
-  node* tail;
+  node_t* head;
+  node_t* tail;
   int length;
   int(*compare)(void*,void*); /*used to compare two data elements*/
+  void(*mdealloc)(void*); /*used to free elements*/
 } list_t;
 
 /* FUNCTIONS */
@@ -30,7 +31,7 @@ typedef struct _list_t {
   ON ERROR: returns null and sets errno to ENOMEM if memory error
             occours / EINVAL if one of the arguments is null
 */
-list_t* list (int(*comp)(void*,void*));
+list_t* list (int(*comp)(void*,void*), void(*mdea)(void*));
 
 /*
   DESCRIPTION: Returns the length of the list passed as argument
@@ -145,7 +146,7 @@ int set (list_t*, void*, int);
 int index_of (list_t*, void*);
 
 /*
-  DESCRIPTION: Deletes the list and all its elements
+  DESCRIPTION: Destroys the list and all its elements
   ARGUMENTS:
     lis - pointer to the list
   RETURNS void
@@ -166,7 +167,7 @@ void destroy (list_t*);
   ON ERROR: returns null and sets errno to EINVAL if one of the arguments
             is null / ENODATA if the list passed as argument is empty
 */
-list_t* map (list_t*, void(*fun)(void*));
+list_t* map (list_t*, void*(*fun)(void*));
 
 /* 
   DESCRIPTION: Returns a new list where all its elements are the result
@@ -180,5 +181,3 @@ list_t* map (list_t*, void(*fun)(void*));
             is null / ENODATA if the list passed as argument is empty
 */
 list_t* filter (list_t*, int(*fun)(void*));
-
-/* TODO: provide a custom function used to free lis->data !!!!!! */
