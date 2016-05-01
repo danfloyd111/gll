@@ -101,7 +101,7 @@ void* cut (list_t*);
 	    n.b. indexes start from 0 / ENODATA if the list
 	    is empty
 */
-int remove (list_t*, int);
+int remove_element (list_t*, int);
 
 /*
   DESCRIPTION: Returns the element at the index passed as argument if is
