@@ -125,7 +125,7 @@ void* cut (list_t* lis) {
 }
 
 /* Remove an element from the list */
-int remove (list_t* lis, int ind) {
+int remove_element (list_t* lis, int ind) {
   if(!length(lis)) {
     errno = ENODATA;
     return 1;
