@@ -9,11 +9,10 @@ SHELL = /bin/bash
 .PHONY : uninstall
 .PHONY : test
 
-all: src/gll.c
+all: src/gll.c src/gll.h
 	@echo ">> Compiling the sources..."
-	@mkdir lib
+	@mkdir -p lib
 	@gcc src/gll.c -c -Wall -Wextra -std=c11 -O2 -o lib/gll.o
-	@gcc src/gll-test.c -o gll-test -Wall -Wextra -std=c11 -O2 -L lib/ -lgll
 	@echo ">> Creating libraries..."
 	@ar ruv lib/libgll.a lib/gll.o
 	@echo ">> Indexing libraries..."
@@ -24,11 +23,15 @@ install: all
 
 clean:
 	@echo ">> Cleaning binary and object files..."
-	@rm -r -f lib
+	@rm -r -f lib bin
 	@echo ">> All clean!"
 
 uninstall: clean
 
-test: all
+test: all src/gll-test.c
 	@echo ">> Compiling test..."
+	@mkdir -p bin
+	@gcc src/gll-test.c -o bin/gll-test -Wall -Wextra -std=c11 -O2 -L lib/ -lgll
 	@echo ">> Running test..."
+	@bin/gll-test
+	@echo ">> Test end!"
