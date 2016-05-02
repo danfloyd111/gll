@@ -27,6 +27,8 @@ typedef struct _list_t {
   ARGUMENTS:
     comp - int function that takes two arguments
            used to compare two elements
+    mdea - void function that takes one argument used to free
+           the elements
   RETURNS the pointer to the newly created (empty) list
   ON ERROR: returns null and sets errno to ENOMEM if memory error
             occours / EINVAL if one of the arguments is null
