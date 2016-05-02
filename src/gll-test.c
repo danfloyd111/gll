@@ -40,8 +40,8 @@ void my_assert (int condition, int error) {
 
 int main () {
   printf("List allocation...\t");
-  list_t* l = list(cmp,mde);
-  my_assert((l != NULL), NO_ERROR);
+  list_t* l = NULL;
+  my_assert(((l = list(cmp,mde)) != NULL), NO_ERROR);
   printf("List destruction...\tUnchecked behaviour, see gll.h\t-> TEST PASSED\n");
   destroy(l);
   return 0;
