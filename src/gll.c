@@ -10,7 +10,7 @@ list_t* list (int(*comp)(void*,void*), void(*mdea)(void*)) {
     errno = EINVAL;
     return NULL;
   }
-  if(!(this = malloc(sizeof(list_t)))) {
+  if(!(this = (list_t*) malloc(sizeof(list_t)))) {
     errno = ENOMEM;
     return NULL;
   }
@@ -37,7 +37,7 @@ int push (void* dat, list_t* lis) {
     return 1;
   }
   node_t* this;
-  if(!(this = malloc(sizeof(node_t)))) {
+  if(!(this = (node_t*) malloc(sizeof(node_t)))) {
     errno = ENOMEM;
     return 1;
   }
@@ -58,7 +58,7 @@ int append (list_t* lis, void* dat) {
     return 1;
   }
   node_t* this;
-  if(!(this = malloc(sizeof(node_t)))) {
+  if(!(this = (node_t*) malloc(sizeof(node_t)))) {
     errno = ENOMEM;
     return 1;
   }
@@ -227,7 +227,6 @@ void destroy (list_t* lis) {
       node_t* el;
       while(it) {
 	el = it;
-	free(it->data);
 	it = it->next;
 	lis->mdealloc(el);
       }
