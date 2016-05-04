@@ -55,7 +55,7 @@ int length (list_t*);
   ON ERROR: returns 1 and sets errno to ENOMEM if memory error
             occours / EINVAL if one of the arguments is null
 */
-int push (void*, list_t*);
+int push (list_t*, void*);
 
 /*
   DESCRIPTION: Appends an element to the tail of the list passed
