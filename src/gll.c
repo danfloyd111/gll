@@ -31,7 +31,7 @@ int length (list_t* lis) {
 }
 
 /* Insert an element in the head of the list */
-int push (void* dat, list_t* lis) {
+int push (list_t* lis, void* dat) {
   if(!dat || !lis) {
     errno = EINVAL;
     return 1;
