@@ -106,13 +106,13 @@ void* cut (list_t*);
 int remove_element (list_t*, int);
 
 /*
-  DESCRIPTION: Remove the element at the index passed as argument if is
+  DESCRIPTION: Returns the element at the index passed as argument if is
                contained in the list passed as argument
   ARGUMENTS:
     lis - pointer to the list
     ind - index of the element (count starts from 0)
-  RETURNS 0 if the function ends correctly
-  ON ERROR: returns 1 and sets errno to EINVAL if one of the arguments
+  RETURNS the pointer to the element
+  ON ERROR: returns NULL and sets errno to EINVAL if one of the arguments
             is null or ind < 0 or ind <= length(lis) / ENODATA if the list
 	    is empty
  */
