@@ -62,6 +62,9 @@ int main () {
 
   printf("Cut enodata...    \t");
   my_assert((cut(l) != NULL), ENODATA);
+
+  printf("Remove enodata... \t");
+  my_assert((remove_element(l,0) == 0), ENODATA);
   
   printf("Push einval...    \t");
   my_assert(((push(NULL,NULL)) == 0), EINVAL);
@@ -147,11 +150,33 @@ int main () {
 	     (strcmp(t->name,"pear") == 0)), NO_ERROR);
   mde(t1);
 
-  printf("Length after cut  \t");
+  printf("Length after cut...\t");
   my_assert(((length(l)) == 2), NO_ERROR);
+  
+  printf("Remove einval...    \t");
+  my_assert((remove_element(NULL, 42) == 0), EINVAL);
+
+  printf("Length again...     \t");
+  my_assert(((length(l)) == 2), NO_ERROR);
+
+  /* BUG IN remove_element - seg fault */
+
+  printf("Remove...           \t");
+  my_assert((remove_element(l, 1) == 0), NO_ERROR);
+
+  printf("Length after remove...\t");
+  my_assert(((length(l)) == 1), NO_ERROR);
+
+  printf("Remove again...       \t");
+  my_assert((remove_element(l, 0) == 0), NO_ERROR);
+
+  printf("Length after remove...\t");
+  my_assert(((length(l)) == 0), NO_ERROR);
   
   printf("List destruction...\tCorrect behaviour\t-> TEST PASSED\n");
   destroy(l);
+
+  printf("End of first test battery...\n");
 
   return 0;
 }
