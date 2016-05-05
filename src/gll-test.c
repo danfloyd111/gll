@@ -158,10 +158,6 @@ int main () {
   printf("Length again...     \t");
   my_assert(((length(l)) == 2), NO_ERROR);
 
-  /* BUG !!!  - seg fault (pop,cut,append,push need a debug */
-  /* it is not into remove_element because the iterator is
-     is null when the bug rise up */
-
   printf("Remove...           \t");
   my_assert((remove_element(l, 1) == 0), NO_ERROR);
 
