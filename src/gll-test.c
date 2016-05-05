@@ -49,7 +49,6 @@ int main () {
   printf("List allocation...\t");
   list_t* l = NULL;
   my_assert(((l = list(cmp,mde)) != NULL), NO_ERROR);
- 
   printf("List einval...    \t");
   list_t* l1 = NULL;
   my_assert(((l1 = list(NULL,NULL)) != NULL), EINVAL);
@@ -159,7 +158,9 @@ int main () {
   printf("Length again...     \t");
   my_assert(((length(l)) == 2), NO_ERROR);
 
-  /* BUG IN remove_element - seg fault */
+  /* BUG !!!  - seg fault (pop,cut,append,push need a debug */
+  /* it is not into remove_element because the iterator is
+     is null when the bug rise up */
 
   printf("Remove...           \t");
   my_assert((remove_element(l, 1) == 0), NO_ERROR);
