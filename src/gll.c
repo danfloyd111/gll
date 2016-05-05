@@ -46,6 +46,8 @@ int push (list_t* lis, void* dat) {
   this->next = lis->head;
   if(!length(lis))
     lis->tail = this;
+  else
+    this->next->prev = this;
   lis->head = this;
   lis->length ++;
   return 0;
@@ -67,6 +69,8 @@ int append (list_t* lis, void* dat) {
   this->prev = lis->tail;
   if(!length(lis))
     lis->head = this;
+  else
+    this->prev->next = this;
   lis->tail = this;
   lis->length ++;
   return 0;
