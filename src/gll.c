@@ -135,20 +135,21 @@ int remove_element (list_t* lis, int ind) {
     return 1;
   }
   node_t* it = lis->head;
+  int old_ind = ind;
   while (ind) {
     it = it->next;
     ind--;
   }
   lis->mdealloc(it->data);
   /* list merging */
-  if(it->prev)
+  if(it->prev != NULL)
     it->prev->next = it->next;
-  if(it->next)
+  if(it->next != NULL)
     it->next->prev = it->prev;
   /* head or tail removal */
-  if(ind == 0)
+  if(old_ind == 0)
     lis->head = it->next;
-  if(ind == (length(lis)-1))
+  if(old_ind == (length(lis)-1))
     lis->tail = it->prev;
   lis->length --;
   free(it);
