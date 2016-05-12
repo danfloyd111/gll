@@ -13,8 +13,10 @@ typedef struct _item {
   int quantity;
 } item;
 
-int cmp (void* s1, void* s2) {
-  return strcmp((char*) s1, (char*) s2);
+int cmp (void* d1, void* d2) {
+  item* i1 = (item*) d1;
+  item* i2 = (item*) d2;
+  return strcmp((char*) i1->name, (char*) i2->name);
 }
 
 void mde (void* itm) {
@@ -28,6 +30,28 @@ void mde (void* itm) {
   /*free(i->name);*/
   free(i);
 }
+
+/* element used for the second part of test */
+typedef struct _int_item {
+  int val;
+} int_item;
+
+int cmp_int (void* d1, void* d2) {
+  int_item* i1 = (int_item*) d1;
+  int_item* i2 = (int_item*) d2;
+  if(i1->val > i2->val)
+    return 1;
+  if(i1->val < i2->val)
+    return -1;
+  return 0;
+}
+
+void mde_int (void* itm) {
+  int_item* i = (int_item*) itm;
+  free(i);
+}
+
+/* *** */
 
 void my_assert (int condition, int error) {
   if(!condition && error == errno) {
@@ -43,6 +67,8 @@ void my_assert (int condition, int error) {
     exit(1);
   }
 }
+
+/* *** */
 
 int main () {
  
@@ -174,6 +200,17 @@ int main () {
   destroy(l);
 
   printf("End of first test battery...\n");
+  
+  printf("Setting up a new environment...\n");
+
+  printf("List allocation...\t");
+  list_t* int_list = NULL;
+  my_assert(((int_list = list(cmp_int,mde_int)) != NULL), NO_ERROR);
+
+  printf("List destruction...\tCorrect behaviour\t-> TEST PASSED\n");
+  destroy(int_list);
+
+  printf("End of second test battery...\n");
 
   return 0;
 }
