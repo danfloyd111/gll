@@ -4,6 +4,7 @@
 #include "gll.h"
 
 #define NO_ERROR 0
+#define NUM_ELEMENTS 100
 
 /* element used for test */
 typedef struct _item {
@@ -206,6 +207,24 @@ int main () {
   printf("List allocation...\t");
   list_t* int_list = NULL;
   my_assert(((int_list = list(cmp_int,mde_int)) != NULL), NO_ERROR);
+  
+  /* Creating some new elements */
+
+  int_item* ptr = NULL;
+  for(int i=0; i<NUM_ELEMENTS; i++) {
+    ptr = (int_item*) malloc(sizeof(int_item));
+    if(ptr == NULL){
+      fprintf(stderr, "Memory allocation failed\n");
+      return 1;
+    }
+    ptr->val = i;
+    append(int_list, (void*) ptr);
+  }
+
+  printf("Checking length...\t");
+  my_assert(((length(int_list)) == NUM_ELEMENTS), NO_ERROR);
+
+  /* MODIFY GET BEHAVIOUR BEFORE TESTING IT -> SEE BUG #4  */
 
   printf("List destruction...\tCorrect behaviour\t-> TEST PASSED\n");
   destroy(int_list);
