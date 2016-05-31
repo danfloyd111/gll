@@ -93,7 +93,7 @@ int main () {
   my_assert((remove_element(l,0) == 0), ENODATA);
   
   printf("Push einval...    \t");
-  my_assert(((push(NULL,NULL)) == 0), EINVAL);
+  my_assert(((push(NULL,NULL,0)) == 0), EINVAL);
 
   printf("Zero length again...\t");
   my_assert(((length(l)) == 0), NO_ERROR);
@@ -105,13 +105,13 @@ int main () {
   el->cost = 2;
   el->weight = 1;
   el->quantity = 100;
-  my_assert(((push(l, (void*)el)) == 0), NO_ERROR);
+  my_assert(((push(l, (void*)el, sizeof(item))) == 0), NO_ERROR);
 
   printf("Length after push...\t");
   my_assert(((length(l)) == 1), NO_ERROR);
 
   printf("Append einval...    \t");
-  my_assert(((append(NULL, NULL)) == 0), EINVAL);
+  my_assert(((append(NULL, NULL, 0)) == 0), EINVAL);
 
   printf("Length again...     \t");
   my_assert(((length(l)) == 1), NO_ERROR);
@@ -123,7 +123,7 @@ int main () {
   el1->cost = 1;
   el1->weight = 2;
   el1->quantity = 150;
-  my_assert(((append(l, (void*) el1)) == 0), NO_ERROR);
+  my_assert(((append(l, (void*) el1, sizeof(item))) == 0), NO_ERROR);
 
   printf("Length after append...\t");
   my_assert(((length(l)) == 2), NO_ERROR);
@@ -135,16 +135,16 @@ int main () {
   el2->cost = 4;
   el2->weight = 1;
   el2->quantity = 30;
-  my_assert(((push(l, (void*) el2)) == 0), NO_ERROR);
+  my_assert(((push(l, (void*) el2, sizeof(item))) == 0), NO_ERROR);
 
-  printf("Append again...    \t");
+  printf("append again...    \t");
   item* el3 = (item*) malloc(sizeof(item));
   char* n3 = "pear";
   el3->name = n3;
   el3->cost = 2;
   el3->weight = 2;
   el3->quantity = 50;
-  my_assert(((append(l, (void*) el3)) == 0), NO_ERROR);
+  my_assert(((append(l, (void*) el3, sizeof(item))) == 0), NO_ERROR);
 
   printf("Length again...    \t");
   my_assert(((length(l)) == 4), NO_ERROR);
@@ -218,13 +218,11 @@ int main () {
       return 1;
     }
     ptr->val = i;
-    append(int_list, (void*) ptr);
+    append(int_list, (void*) ptr, sizeof(int_item));
   }
 
   printf("Checking length...\t");
   my_assert(((length(int_list)) == NUM_ELEMENTS), NO_ERROR);
-
-  /* MODIFY GET BEHAVIOUR BEFORE TESTING IT -> SEE BUG #4  */
 
   printf("List destruction...\tCorrect behaviour\t-> TEST PASSED\n");
   destroy(int_list);
