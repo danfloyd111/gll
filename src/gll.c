@@ -31,8 +31,8 @@ int length (list_t* lis) {
 }
 
 /* Insert an element in the head of the list */
-int push (list_t* lis, void* dat) {
-  if(!dat || !lis) {
+int push (list_t* lis, void* dat, int dsi) {
+  if(!dat || !lis || !dsi) {
     errno = EINVAL;
     return 1;
   }
@@ -42,6 +42,7 @@ int push (list_t* lis, void* dat) {
     return 1;
   }
   this->data = dat;
+  this->data_size = dsi;
   this->prev = NULL;
   this->next = lis->head;
   if(!length(lis))
@@ -54,8 +55,8 @@ int push (list_t* lis, void* dat) {
 }
 
 /* Append an element to the tail of the list */
-int append (list_t* lis, void* dat) {
-  if (!dat || !lis) {
+int append (list_t* lis, void* dat, int dsi) {
+  if (!dat || !lis || !dsi) {
     errno = EINVAL;
     return 1;
   }
@@ -65,6 +66,7 @@ int append (list_t* lis, void* dat) {
     return 1;
   }
   this->data = dat;
+  this->data_size = dsi;
   this->next = NULL;
   this->prev = lis->tail;
   if(!length(lis))
@@ -160,7 +162,7 @@ int remove_element (list_t* lis, int ind) {
   return 0;
 }
 
-/* Return the element at specified index*/
+/* Return a copy of the element at specified index*/
 void* get (list_t* lis, int ind) {
   if(lis == NULL || ind < 0 || ind > length(lis)-1) {
     errno = EINVAL;
@@ -175,7 +177,14 @@ void* get (list_t* lis, int ind) {
     it = it->next;
     ind --;
   }
-  return it->data;
+  /* deep copy */
+  node_t* data;
+  if(!(data = (void*) malloc(it->data_size))) {
+    errno = ENOMEM;
+    return NULL;
+  }
+  memcpy(data, it->data, it->data_size);
+  return data;
 }
 
 /* Set the element at specified index with the element
@@ -254,7 +263,7 @@ list_t* map (list_t* lis, void*(*fun)(void*)) {
   list_t* nl = list(lis->compare, lis->mdealloc);
   node_t* it = lis->head;
   while(it) {
-    append(nl, fun(it->data));
+    append(nl, fun(it->data), it->data_size);
     it = it->next;
   }
   return nl;
@@ -275,7 +284,7 @@ list_t* filter (list_t* lis, int(*fun)(void*)) {
   node_t* it = lis->head;
   while(it) {
     if(fun(it->data))
-      append(nl,it->data);
+      append(nl, it->data, it->data_size);
     it = it->next;
   }
   return nl;
