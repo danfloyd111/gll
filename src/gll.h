@@ -7,6 +7,7 @@
 /* Element of the list */
 typedef struct _node_t {
   void* data;
+  int data_size; /* used only in get method */
   struct _node_t* prev;
   struct _node_t* next;
 } node_t;
@@ -51,11 +52,13 @@ int length (list_t*);
   ARGUMENTS:
     dat - pointer to the element
     lis - pointer to the list
+    dsi - size of the element
   RETURNS 0 if the function terminates correctly
   ON ERROR: returns 1 and sets errno to ENOMEM if memory error
-            occours / EINVAL if one of the arguments is null
+            occours / EINVAL if one of the arguments is null or
+	    zero
 */
-int push (list_t*, void*);
+int push (list_t*, void*, int);
 
 /*
   DESCRIPTION: Appends an element to the tail of the list passed
@@ -63,11 +66,13 @@ int push (list_t*, void*);
   ARGUMENTS:
     dat - pointer to the element
     lis - ponter to the list
+    dsi - size of the element
   RETURNS 0 if the function terminates correctly
   ON ERROR: returns 1 and sets errno to ENOMEM if memory error
-            occours / EINVAL if one of the argument is null
+            occours / EINVAL if one of the argument is null or
+	    zero
 */
-int append (list_t*, void*);
+int append (list_t*, void*, int);
 
 /*
   DESCRIPTION: Returns and remove the first element from the list
@@ -106,15 +111,15 @@ void* cut (list_t*);
 int remove_element (list_t*, int);
 
 /*
-  DESCRIPTION: Returns the element at the index passed as argument if is
-               contained in the list passed as argument
+  DESCRIPTION: Returns a copy of the element at the index passed as
+               argument if is contained in the list passed as argument
   ARGUMENTS:
     lis - pointer to the list
     ind - index of the element (count starts from 0)
-  RETURNS the pointer to the element
+  RETURNS the pointer to a copy of the element
   ON ERROR: returns NULL and sets errno to EINVAL if one of the arguments
             is null or ind < 0 or ind <= length(lis) / ENODATA if the list
-	    is empty
+	    is empty / ENOMEM if memory error occours
  */
 void* get (list_t*, int);
 
