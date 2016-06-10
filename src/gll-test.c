@@ -73,9 +73,12 @@ void my_assert (int condition, int error) {
 
 int main () {
  
+  /* LIST ALLOCATION & ENODATAS */
+
   printf("List allocation...\t");
   list_t* l = NULL;
   my_assert(((l = list(cmp,mde)) != NULL), NO_ERROR);
+  
   printf("List einval...    \t");
   list_t* l1 = NULL;
   my_assert(((l1 = list(NULL,NULL)) != NULL), EINVAL);
@@ -92,11 +95,21 @@ int main () {
   printf("Remove enodata... \t");
   my_assert((remove_element(l,0) == 0), ENODATA);
   
+  printf("Get enodata... \t\t");
+  my_assert((get(l,42) != NULL), ENODATA);
+  /* just a test element */
+  item* te = (item*) malloc(sizeof(item));
+  printf("Set enodata... \t\t");
+  my_assert((set(l,te,42) == 0), ENODATA);
+  free(te);
+
   printf("Push einval...    \t");
   my_assert(((push(NULL,NULL,0)) == 0), EINVAL);
 
   printf("Zero length again...\t");
   my_assert(((length(l)) == 0), NO_ERROR);
+
+  /* PUSH & APPEND */
 
   printf("Push element...     \t");
   item* el = (item*) malloc(sizeof(item));
@@ -149,6 +162,8 @@ int main () {
   printf("Length again...    \t");
   my_assert(((length(l)) == 4), NO_ERROR);
 
+  /* POP */
+
   printf("Pop einval...      \t");
   my_assert((pop(NULL)!=NULL), EINVAL);
 
@@ -163,6 +178,8 @@ int main () {
 
   printf("Length after pop  \t");
   my_assert(((length(l)) == 3), NO_ERROR);
+
+  /* CUT */
 
   printf("Cut einval...     \t");
   my_assert((cut(NULL)!= NULL), EINVAL);
@@ -179,6 +196,8 @@ int main () {
   printf("Length after cut...\t");
   my_assert(((length(l)) == 2), NO_ERROR);
   
+  /* REMOVE */
+
   printf("Remove einval...    \t");
   my_assert((remove_element(NULL, 42) == 0), EINVAL);
 
@@ -196,6 +215,8 @@ int main () {
 
   printf("Length after remove...\t");
   my_assert(((length(l)) == 0), NO_ERROR);
+
+  /* DESTRUCTION */
   
   printf("List destruction...\tCorrect behaviour\t-> TEST PASSED\n");
   destroy(l);
@@ -223,6 +244,94 @@ int main () {
 
   printf("Checking length...\t");
   my_assert(((length(int_list)) == NUM_ELEMENTS), NO_ERROR);
+  
+  /* GET */
+
+  printf("Get einval 1...\t\t");
+  my_assert(((get(NULL, 3)) != NULL), EINVAL);
+
+  printf("Get einval 2...\t\t");
+  my_assert(((get(int_list, NUM_ELEMENTS)) != NULL), EINVAL);
+
+  printf("Get einval 3...\t\t");
+  my_assert(((get(int_list, -1)) != NULL), EINVAL);
+
+  printf("Get test 1...\t\t");
+  int_item* fst;
+  my_assert(((fst = get(int_list, 0)) != NULL), NO_ERROR);
+  printf("Get test 2...\t\t");
+  int_item* lst;
+  my_assert(((lst = get(int_list, NUM_ELEMENTS -1)) != NULL), NO_ERROR);
+  printf("Get test 3...\t\t");
+  int_item* mid;
+  my_assert(((mid = get(int_list, (NUM_ELEMENTS -1) /2)) != NULL), NO_ERROR);
+  /* equivalence test */
+  int ceq_fst = fst->val == 0;
+  int ceq_lst = lst->val == NUM_ELEMENTS -1;
+  int ceq_mid = mid->val == (NUM_ELEMENTS -1) /2;
+  /* information hiding test */
+  free(fst);
+  free(lst);
+  free(mid);
+  /* if the pointer is shared next instructions will cause segfault */
+  fst = get(int_list, 0);
+  lst = get(int_list, NUM_ELEMENTS -1);
+  mid = get(int_list, (NUM_ELEMENTS -1) /2);
+  printf("Get equivalence...\t");
+  my_assert(ceq_fst && ceq_lst && ceq_mid, NO_ERROR);
+
+  printf("Length after get...\t");
+  my_assert(((length(int_list)) == NUM_ELEMENTS), NO_ERROR);
+
+  /* SET */
+
+  printf("Set einval 1...\t\t");
+  my_assert(((set(int_list, NULL, 0)) == 0), EINVAL);
+
+  fst = (int_item*) malloc(sizeof(int_item));
+  lst = (int_item*) malloc(sizeof(int_item));
+  mid = (int_item*) malloc(sizeof(int_item));
+  if(!fst || !lst || !mid){
+    fprintf(stderr, "Memory allocation failed\n");
+    return 1;
+  }
+  fst->val = 42;
+  lst->val = 42;
+  mid->val = 42;
+
+  printf("Set einval 2...\t\t");
+  my_assert(((set(NULL, fst, 0)) == 0), EINVAL);
+
+  printf("Set einval 3...\t\t");
+  my_assert(((set(int_list, fst, -1)) == 0), EINVAL);
+
+  printf("Set einval 4...\t\t");
+  my_assert(((set(int_list, fst, NUM_ELEMENTS)) == 0), EINVAL);
+
+  printf("Set test 1...\t\t");
+  my_assert(((set(int_list, fst, 0)) == 0), NO_ERROR);
+ 
+  printf("Set test 2...\t\t");
+  my_assert(((set(int_list, lst, NUM_ELEMENTS -1)) == 0), NO_ERROR);
+
+  printf("Set test 3...\t\t");
+  my_assert(((set(int_list, fst, (NUM_ELEMENTS -1) /2)) == 0), NO_ERROR);
+
+  /* equivalence test */
+  int_item* ff, *ll, *mm;
+  ff = get(int_list, 0);
+  ll = get(int_list, NUM_ELEMENTS -1);
+  mm = get(int_list, (NUM_ELEMENTS -1) /2);
+  printf("Set equivalence...\t");
+  my_assert(ff->val == 42 && ll->val == 42 && mm->val == 42, NO_ERROR);
+  free(ff);
+  free(ll);
+  free(mm);
+
+  printf("Length after set...\t");
+  my_assert(((length(int_list)) == NUM_ELEMENTS), NO_ERROR);
+
+  /* DESTRUCTION */
 
   printf("List destruction...\tCorrect behaviour\t-> TEST PASSED\n");
   destroy(int_list);
