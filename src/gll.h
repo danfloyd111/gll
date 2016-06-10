@@ -131,7 +131,7 @@ void* get (list_t*, int);
     dat - pointer to the new element
     ind - index of the element to set
   RETURNS 0 if the function ends correctly
-  ON ERROR: returns 0 and sets errno to EINVAL if one of the arguments is
+  ON ERROR: returns 1 and sets errno to EINVAL if one of the arguments is
             null or ind < 0 or ind <= length(is) / ENODATA if the list is
             empty
 */
