@@ -164,12 +164,18 @@ int remove_element (list_t* lis, int ind) {
 
 /* Return a copy of the element at specified index*/
 void* get (list_t* lis, int ind) {
-  if(lis == NULL || ind < 0 || ind > length(lis)-1) {
+  /* einval check is split in two parts in order to preserve
+     the enodata meaning */
+  if(!lis) {
     errno = EINVAL;
     return NULL;
   }
-  if(length(lis) == 0) {
+  if(!length(lis)) {
     errno = ENODATA;
+    return NULL;
+  }
+  if(ind < 0 || ind > length(lis)-1) {
+    errno = EINVAL;
     return NULL;
   }
   node_t* it = lis->head;
@@ -190,12 +196,18 @@ void* get (list_t* lis, int ind) {
 /* Set the element at specified index with the element
    passed as argument */
 int set (list_t* lis, void* dat, int ind) {
-  if(lis == NULL || ind < 0 || ind > length(lis)-1) {
+  /* einval check is split in two parts in order to preserve
+     the enodata meaning */
+  if(!lis || !dat) {
     errno = EINVAL;
     return 1;
   }
-  if(length(lis) == 0) {
+  if(!length(lis)) {
     errno = ENODATA;
+    return 1;
+  }
+  if(ind < 0 || ind > length(lis)-1) {
+    errno = EINVAL;
     return 1;
   }
   node_t* it = lis->head;
