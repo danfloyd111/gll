@@ -138,8 +138,8 @@ void* get (list_t*, int);
 int set (list_t*, void*, int);
 
 /*
-  DESCRIPTION: Returns the index of the element passed as argument
-               if is contained in the list passed as argument
+  DESCRIPTION: Returns the index of the first occourence of the element
+               passed as argument if is contained in the list passed as argument
   ARGUMENTS:
     lis - pointer to the list
     dat - pointer to the element
