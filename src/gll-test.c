@@ -52,6 +52,22 @@ void mde_int (void* itm) {
   free(i);
 }
 
+void* double_val (void* itm) {
+  /*
+    n.b. in order to preserve the original elements, it's
+    recommended to make a new element instead of use the
+    same provided as argument
+  */
+  int_item* v = (int_item*) itm;
+  int_item* ni = (int_item*) malloc(sizeof(int_item));
+  if(!ni){
+    fprintf(stderr,"Memory allocation failed\n");
+    exit(1);
+  }
+  ni->val = v->val * 2;
+  return ni;
+}
+
 /* *** */
 
 void my_assert (int condition, int error) {
@@ -331,12 +347,79 @@ int main () {
   printf("Length after set...\t");
   my_assert(((length(int_list)) == NUM_ELEMENTS), NO_ERROR);
 
+  /* INDEX OF */
+
+  printf("Index of einval 1...\t");
+  my_assert(((index_of(int_list,NULL)) != -1), EINVAL);
+  
+  ff = (int_item*) malloc(sizeof(int_item));
+  if(!ff){
+    fprintf(stderr,"Memory allocation failed\n");
+    return 1;
+  }
+  ff->val = NUM_ELEMENTS + 999;
+  printf("Index of einval 2...\t");
+  my_assert(((index_of(NULL,ff)) != -1), EINVAL);
+
+  printf("Index of enodata 1...\t");
+  my_assert(((index_of(int_list,ff)) != -1), ENODATA);
+  
+  
+  printf("Index of enodata 2...\t");
+  list_t* empty_int_list = list(cmp_int,mde_int);
+  my_assert(((index_of(empty_int_list,ff)) != -1), ENODATA);
+  
+  ff->val = 46;
+  printf("Index of test...\t");
+  my_assert(((index_of(int_list,ff)) == 46), NO_ERROR);
+
+  printf("Another length test...\t");
+  my_assert(((length(int_list)) == NUM_ELEMENTS), NO_ERROR);
+
+  /* MAP */
+
+  printf("Map enodata...\t\t");
+  my_assert(((map(empty_int_list,double_val)) != NULL), ENODATA);
+
+  printf("Map einval 1...\t\t");
+  my_assert(((map(NULL,double_val)) != NULL), EINVAL);
+
+  printf("Map einval 2...\t\t");
+  my_assert(((map(int_list,NULL)) != NULL), EINVAL);
+
+  list_t* doubled_list = NULL;
+  printf("Map execution...\t");
+  my_assert(((doubled_list = map(int_list,double_val)) != NULL), NO_ERROR);
+
+  int correct = 1;
+  int i = 0;
+  while(correct && i < NUM_ELEMENTS){
+    int_item* ita = NULL, *itb = NULL;
+    ita = get(int_list,i);
+    itb = get(doubled_list,i);
+    if(itb->val != ita->val * 2)
+      correct = 0;
+    free(ita);
+    free(itb);
+    i++;
+  }
+  printf("Map correctness...\t");
+  my_assert(correct,NO_ERROR);
+
+  printf("Checking length...\t");
+  my_assert(((length(int_list) == length(doubled_list))), NO_ERROR);
+
+  /* FILTER */
+  
   /* DESTRUCTION */
 
   printf("List destruction...\tCorrect behaviour\t-> TEST PASSED\n");
   destroy(int_list);
 
   printf("End of second test battery...\n");
+
+  destroy(empty_int_list);
+  destroy(doubled_list);
 
   return 0;
 }
