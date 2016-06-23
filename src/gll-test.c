@@ -68,6 +68,13 @@ void* double_val (void* itm) {
   return ni;
 }
 
+/* helper function checks if a value is odd */
+int odd_val (void* itm) {
+  int_item* i = (int_item*) itm;
+  int v = i->val;
+  return v % 2 != 0; 
+}
+
 /* *** */
 
 void my_assert (int condition, int error) {
@@ -410,6 +417,29 @@ int main () {
   my_assert(((length(int_list) == length(doubled_list))), NO_ERROR);
 
   /* FILTER */
+  printf("Filter enodata...\t");
+  my_assert(((filter(empty_int_list, odd_val)) != NULL), ENODATA);
+
+  printf("Filter einval 1...\t");
+  my_assert(((filter(int_list, NULL)) != NULL), EINVAL);
+
+  printf("Filter einval 2...\t");
+  my_assert(((filter(NULL, odd_val)) != NULL), EINVAL);
+
+  list_t* filtered_list = NULL;
+  printf("Filter execution...\t");
+  my_assert(((filtered_list = filter(int_list, odd_val)) != NULL), NO_ERROR);
+
+  correct = 1;
+  i = 0;
+  int ln = length(filtered_list);
+  while(correct && i < ln){
+    int_item* it = get(filtered_list, i);
+    correct = it->val % 2;
+    i++;
+  }
+  printf("Filter correctness...\t");
+  my_assert(correct, NO_ERROR);
   
   /* DESTRUCTION */
 
