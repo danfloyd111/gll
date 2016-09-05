@@ -1,7 +1,7 @@
 # gll
 Another C library usable for creation and management of generic linked lists.
 
-## Installation and usage
+# Installation and usage
 Once downloaded you have to compile it, so:
 * open a shell (like the _bash_)
 * enter in the directory just downloaded (`cd /path_to_gll/gll`)
@@ -17,10 +17,10 @@ For example: if you want to use it in your _/foo.c_ program you have to tell _gc
 __n.b__ For now there is no possibility to use this library in "dynamic loading" as a shared _.so_ object, 
 but only in default "static mode". In the next versions I'll try to add this feature.
 
-## Api
+# Api
 Here you can find a short description of the functions this library offers and their signatures
 
-#### list
+##list
 Create a brand new list.
 `list_t* list (int(*comp)(void*,void*), void(*mdea)(void*));`
 
@@ -60,7 +60,7 @@ int memory_deallocation (void *itm) {
 }
 ```
 
-### length
+## length
 Returns the length of a list.
 
 Currently under construction! Stay tuned!
