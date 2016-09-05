@@ -3,10 +3,10 @@ Another C library usable for creation and management of generic linked lists.
 
 ## Installation and usage
 Once downloaded you have to compile it, so:
-1. open a shell (like the _bash_)
-2. enter in the directory just downloaded (`cd /path_to_gll/gll`)
-3. compile the sources (`make install`)
-4. optional: test the library (`make test`) and report any issue ;)
+* open a shell (like the _bash_)
+* enter in the directory just downloaded (`cd /path_to_gll/gll`)
+* compile the sources (`make install`)
+* optional: test the library (`make test`) and report any issue ;)
 
 If you want to __remove__ the binaries generated just do `make clean`.
 
