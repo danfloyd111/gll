@@ -24,7 +24,7 @@ void mde (void* itm) {
   item* i = (item*) itm;
   /* in this case the next line is useless and dangerous
      because i decided to allocate names of the items
-     on the stack, not on the heap !!! If you want to 
+     on the stack, not on the heap !!! If you want to
      allocate them on the heap uncomment the next line
      in order to not waste memory.
   */
@@ -72,7 +72,7 @@ void* double_val (void* itm) {
 int odd_val (void* itm) {
   int_item* i = (int_item*) itm;
   int v = i->val;
-  return v % 2 != 0; 
+  return v % 2 != 0;
 }
 
 /* *** */
@@ -95,13 +95,13 @@ void my_assert (int condition, int error) {
 /* *** */
 
 int main () {
- 
+
   /* LIST ALLOCATION & ENODATAS */
 
   printf("List allocation...\t");
   list_t* l = NULL;
   my_assert(((l = list(cmp,mde)) != NULL), NO_ERROR);
-  
+
   printf("List einval...    \t");
   list_t* l1 = NULL;
   my_assert(((l1 = list(NULL,NULL)) != NULL), EINVAL);
@@ -117,7 +117,7 @@ int main () {
 
   printf("Remove enodata... \t");
   my_assert((remove_element(l,0) == 0), ENODATA);
-  
+
   printf("Get enodata... \t\t");
   my_assert((get(l,42) != NULL), ENODATA);
   /* just a test element */
@@ -151,7 +151,7 @@ int main () {
 
   printf("Length again...     \t");
   my_assert(((length(l)) == 1), NO_ERROR);
-  
+
   printf("Append element...   \t");
   item* el1 = (item*) malloc(sizeof(item));
   char* n1 = "apple";
@@ -218,7 +218,7 @@ int main () {
 
   printf("Length after cut...\t");
   my_assert(((length(l)) == 2), NO_ERROR);
-  
+
   /* REMOVE */
 
   printf("Remove einval...    \t");
@@ -240,18 +240,18 @@ int main () {
   my_assert(((length(l)) == 0), NO_ERROR);
 
   /* DESTRUCTION */
-  
+
   printf("List destruction...\tCorrect behaviour\t-> TEST PASSED\n");
   destroy(l);
 
   printf("End of first test battery...\n");
-  
+
   printf("Setting up a new environment...\n");
 
   printf("List allocation...\t");
   list_t* int_list = NULL;
   my_assert(((int_list = list(cmp_int,mde_int)) != NULL), NO_ERROR);
-  
+
   /* Creating some new elements */
 
   int_item* ptr = NULL;
@@ -267,7 +267,7 @@ int main () {
 
   printf("Checking length...\t");
   my_assert(((length(int_list)) == NUM_ELEMENTS), NO_ERROR);
-  
+
   /* GET */
 
   printf("Get einval 1...\t\t");
@@ -333,7 +333,7 @@ int main () {
 
   printf("Set test 1...\t\t");
   my_assert(((set(int_list, fst, 0)) == 0), NO_ERROR);
- 
+
   printf("Set test 2...\t\t");
   my_assert(((set(int_list, lst, NUM_ELEMENTS -1)) == 0), NO_ERROR);
 
@@ -358,7 +358,7 @@ int main () {
 
   printf("Index of einval 1...\t");
   my_assert(((index_of(int_list,NULL)) != -1), EINVAL);
-  
+
   ff = (int_item*) malloc(sizeof(int_item));
   if(!ff){
     fprintf(stderr,"Memory allocation failed\n");
@@ -370,12 +370,12 @@ int main () {
 
   printf("Index of enodata 1...\t");
   my_assert(((index_of(int_list,ff)) != -1), ENODATA);
-  
-  
+
+
   printf("Index of enodata 2...\t");
   list_t* empty_int_list = list(cmp_int,mde_int);
   my_assert(((index_of(empty_int_list,ff)) != -1), ENODATA);
-  
+
   ff->val = 46;
   printf("Index of test...\t");
   my_assert(((index_of(int_list,ff)) == 46), NO_ERROR);
@@ -440,12 +440,12 @@ int main () {
   }
   printf("Filter correctness...\t");
   my_assert(correct, NO_ERROR);
-  
+
   /* DESTRUCTION */
 
   printf("List destruction...\tCorrect behaviour\t-> TEST PASSED\n");
   destroy(int_list);
-
+  
   printf("End of second test battery...\n");
 
   destroy(empty_int_list);
